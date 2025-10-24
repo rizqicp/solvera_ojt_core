@@ -2,11 +2,11 @@
 
 ## 1. Job Preparation
 Before using the OJT features, ensure that a job position is available for training.  
-Any open recruitment position (e.g. *"Community Officer Bandung"*) can be linked to an OJT process.
+Any open recruitment position (e.g. *"Odoo Developer Trainee"*) can be linked to an OJT process.
 
 To make it eligible:
-- Go to **Settings → On the Job Training Configuration → OJT Stages**
-- Add the corresponding **Job Position** to the **OJT Stage** list.
+- Go to **Recruitment → Configuration → Stages**
+- Add the corresponding **Job Position** to the **On The Job Training Stage** list.
 
 This marks the job as part of the On the Job Training workflow.
 
@@ -23,7 +23,6 @@ Once a job is configured for OJT:
 
 ## 3. Portal Access
 Participants can access their OJT dashboard via the **Odoo Portal**:
-- Navigate to **My Account → On the Job Training**
 - From there, they can:
   - View available **Batches**
   - **Apply** to a specific batch

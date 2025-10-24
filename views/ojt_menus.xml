@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="0">
+    <!-- Root Menu -->
+    <menuitem id="ojt_menu_root"
+        name="OJT"
+        sequence="211"
+        web_icon="solvera_ojt_core,static/description/icon.png"/>
+    
+    <!-- Menus -->
+    <menuitem id="ojt_batch_menu_action"
+        name="Batches"
+        parent="solvera_ojt_core.ojt_menu_root"
+        action="ojt_batch_action"
+        sequence="1"/>
+    
+    <menuitem id="ojt_participant_menu_action"
+        name="Participants"
+        parent="solvera_ojt_core.ojt_menu_root"
+        action="ojt_participant_action"
+        sequence="2"/>
+    
+    <menuitem id="ojt_assignment_menu"
+        name="Assignments"
+        parent="solvera_ojt_core.ojt_menu_root"
+        sequence="3"/>
+    
+    <menuitem id="ojt_event_menu"
+        name="Events"
+        parent="solvera_ojt_core.ojt_menu_root"
+        sequence="4"/>
+    
+    <menuitem id="ojt_certificate_menu"
+        name="Certificates"
+        parent="solvera_ojt_core.ojt_menu_root"
+        action="ojt_certificate_action"
+        sequence="5"/>
+
+    <!-- Submenus -->
+     <menuitem id="ojt_assignment_menu_action"
+        name="All Assignments"
+        parent="solvera_ojt_core.ojt_assignment_menu"
+        action="ojt_assignment_action"
+        sequence="30"/>
+
+    <menuitem id="ojt_submission_menu_action"
+        name="Submissions"
+        parent="solvera_ojt_core.ojt_assignment_menu"
+        action="ojt_submission_action"
+        sequence="31"/>
+
+    <menuitem id="ojt_event_menu_action"
+        name="All Events"
+        parent="solvera_ojt_core.ojt_event_menu"
+        action="ojt_event_action"
+        sequence="40"/>
+
+    <menuitem id="ojt_attendance_menu_action"
+        name="Attendances"
+        parent="solvera_ojt_core.ojt_event_menu"
+        action="ojt_attendance_action"
+        sequence="41"/>
+
+</odoo>

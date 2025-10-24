@@ -1,0 +1,43 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'Solvera OJT Core',
+    'version': '1.0',
+    'summary': 'Core module for Solvera OJT customizations',
+    'description': """This module contains core customizations for Solvera OJT, including HR and recruitment enhancements.""",
+    'category': 'Human Resources',
+    'author': 'Rizqi Chandra',
+    'website': 'https://www.linkedin.com/in/rizqichandrapramana/',
+    'depends': [
+        'website',
+        'website_hr_recruitment',
+        'auth_signup',
+        'portal',
+        'event',
+    ],
+    'data': [
+        'security/ojt_security.xml',
+        'security/ir.model.access.csv',
+        'views/ojt_batch_views.xml',
+        'views/ojt_participant_views.xml',
+        'views/ojt_assignment_views.xml',
+        'views/ojt_submission_views.xml',
+        'views/ojt_attendance_views.xml',
+        'views/ojt_certificate_views.xml',
+        'views/event_event_views.xml',
+        'views/ojt_menus.xml',
+        'views/ojt_portal_templates.xml',
+        'data/ojt_certificate_template.xml',
+        'data/ojt_mail_template.xml',
+        'data/ojt_website_menus.xml',
+        'data/ojt_recruitment_data.xml',
+        'data/ojt_demo.xml',
+    ],
+    'demo':[
+        # 'data/ojt_demo.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+    'sequence': 1,
+    'license': 'AGPL-3'
+}

@@ -1,0 +1,422 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="0">
+
+    <template id="portal_batches" name="OJT Batches Portal Page">
+        <t t-call="portal.portal_layout">
+            <!-- Breadcrumbs -->
+            <t t-set="breadcrumbs" t-value="[['On The Job Training', '/ojt']]"/>
+            <div id="wrap" class="oe_structure">
+                <div class="container mt16 o_portal_wrap">
+                    <h2 class="mb-3">Available OJT Batches</h2>
+
+                    <t t-if="not batches">
+                        <div class="alert alert-info">
+                            No batches available for your account.
+                        </div>
+                    </t>
+
+                    <t t-else="">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Batch Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="batches" t-as="batch">
+                                    <tr>
+                                        <td><strong><t t-esc="batch.name"/></strong></td>
+                                        <td><t t-esc="batch.start_date"/></td>
+                                        <td><t t-esc="batch.end_date"/></td>
+                                        <td><span t-esc="batch.state" class="badge bg-secondary"/></td>
+                                        <td>
+                                            <t t-if="batch.id in applied_batch_ids">
+                                                <button class="btn btn-sm btn-success" disabled="disabled">
+                                                    ✓ Applied
+                                                </button>
+                                            </t>
+                                            <t t-else="">
+                                                <a t-att-href="'/ojt/apply/%s' % batch.id"
+                                                   class="btn btn-sm btn-primary">
+                                                    Apply
+                                                </a>
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </div>
+
+            <div id="wrap" class="oe_structure">
+                <div class="container mt16 o_portal_wrap">
+                    <h2 class="mb-3">My OJT Batches</h2>
+
+                    <t t-if="not my_batches">
+                        <div class="alert alert-info">
+                            You are not currently enrolled in any OJT batch.
+                        </div>
+                    </t>
+
+                    <t t-else="">
+                        <table class="table table-hover table-striped">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Batch Name</th>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                    <th>Status</th>
+                                    <th>Progress</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="my_batches" t-as="batch">
+                                    <tr>
+                                        <td><strong><t t-esc="batch.name"/></strong></td>
+                                        <td><t t-esc="batch.start_date"/></td>
+                                        <td><t t-esc="batch.end_date"/></td>
+                                        <td>
+                                            <span t-attf-class="badge 
+                                                #{'bg-success' if batch.state == 'done' else 
+                                                'bg-warning' if batch.state == 'ongoing' else 
+                                                'bg-secondary'}">
+                                                <t t-esc="batch.state"/>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <!-- Optional progress or link -->
+                                            <a t-att-href="'/ojt/batch/%s' % batch.id" class="btn btn-sm btn-outline-primary">
+                                                View Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </div>
+            </div>
+            
+        </t>
+    </template>
+
+    <template id="portal_batch_dashboard" name="OJT Batch Dashboard">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs" t-value="[['On The Job Training', '/ojt'], [batch.name, '/ojt/batch/%s' % batch.id]]"/>
+
+            <div id="wrap" class="oe_structure">
+                <div class="container mt16 o_portal_wrap">
+                    <h2><t t-esc="batch.name"/></h2>
+                    <p class="text-muted mb-3">
+                        <strong>Start:</strong> <t t-esc="batch.start_date"/>
+                        <span class="mx-2">|</span>
+                        <strong>End:</strong> <t t-esc="batch.end_date"/>
+                    </p>
+                    <div>
+                        <t t-if="certificate">
+                            <a t-att-href="'/ojt/certificate/download/%s' % certificate.id" class="btn btn-primary">Download certificate (PDF)</a>
+                        </t>
+                    </div>
+
+                    <!-- Participant Stats -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">Overall Score</h5>
+                                    <div class="progress mt-3" style="height: 20px;">
+                                        <div class="progress-bar bg-success"
+                                            role="progressbar"
+                                            t-att-style="'width: ' + str(overall_score) + '%;'"
+                                            t-esc="str(overall_score) + '%'"/>
+                                    </div>
+                                    <small class="text-muted">Your target score: 100%</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title">Attendance Rate</h5>
+                                    <div class="progress mt-3" style="height: 20px;">
+                                        <div class="progress-bar bg-success"
+                                            role="progressbar"
+                                            t-att-style="'width: ' + str(attendance_rate) + '%;'"
+                                            t-esc="str(attendance_rate) + '%'"/>
+                                    </div>
+                                    <small class="text-muted">Keep your attendance above 80%.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <!-- Assignments Section -->
+                            <h4>Assignments</h4>
+                            <t t-if="not assignments">
+                                <div class="alert alert-info">
+                                    No assignments yet for this batch.
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <table class="table table-hover table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Title</th>
+                                            <th>Assignment Type</th>
+                                            <th>Deadline</th>
+                                            <th>Status</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="assignments" t-as="assignment">
+                                            <t t-set="submission" t-value="assignment.submit_ids.filtered(lambda s: s.participant_id.user_id.id == request.env.user.id)[:1]"/>
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="assignment.name"/>
+                                                </td>
+                                                <td><t t-esc="assignment.assignment_type"/></td>
+                                                <td><t t-esc="assignment.deadline"/></td>
+                                                <td>
+                                                    <t t-if="submission">
+                                                        <span t-esc="submission.state" t-attf-class="badge bg-#{'success' if submission.state == 'scored' else ('warning' if submission.state == 'submitted' else 'secondary')}"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span class="badge bg-secondary">Not Submitted</span>
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <a t-att-href="'/ojt/assignment/%s' % assignment.id" class="text-primary fw-bold">
+                                                        Details
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+                        </div>
+                        <div class="col-md-6">
+                             <!-- Upcoming Events Section -->
+                            <h4>Ongoing and Upcoming Events</h4>
+                            <t t-set="all_events" t-value="ongoing_events + upcoming_events"/>
+                            <t t-if="not all_events">
+                                <div class="alert alert-info">
+                                    No events scheduled for this batch.
+                                </div>
+                            </t>
+                            <t t-else="">
+                                <table class="table table-hover table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Event</th>
+                                            <th>Start</th>
+                                            <th>End</th>
+                                            <th>Status</th>
+                                            <th>Attendance</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="all_events" t-as="event">
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="event.name"/>
+                                                </td>
+                                                <td><t t-esc="event.date_begin"/></td>
+                                                <td><t t-esc="event.date_end"/></td>
+                                                <td>
+                                                    <t t-if="event in ongoing_events">
+                                                        <span class="badge bg-success">Ongoing</span>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span class="badge bg-primary">Upcoming</span>
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <t t-set="attendance" t-value="event.attendance_ids.filtered(lambda a: a.participant_id.user_id.id == request.env.user.id)[:1]"/>
+                                                    <t t-if="attendance">
+                                                        <span t-attf-class="badge bg-#{'success' if attendance.presence == 'present' else 'secondary'}"
+                                                            t-esc="attendance.presence.capitalize()"/>
+                                                    </t>
+                                                    <t t-else="">
+                                                        <span class="badge bg-secondary">Not Checked-in</span>
+                                                    </t>
+                                                </td>
+                                                <td>
+                                                    <a t-att-href="'/ojt/event/%s' % event.id" class="text-primary fw-bold">
+                                                        Details
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </t>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_assignment_detail" name="Assignment Detail">
+        <t t-call="portal.portal_layout">
+            <div id="wrap" class="oe_structure">
+                <div class="container mt16 o_portal_wrap">
+                    <h3><t t-esc="assignment.name"/></h3>
+                    <p><strong>Assignment Type:</strong> <t t-esc="assignment.assignment_type"/></p>
+                    <p><strong>Deadline:</strong> <t t-esc="assignment.deadline"/></p>
+
+                    <div class="mt-3">
+                        <h5>Description</h5>
+                        <t t-raw="assignment.description"/>
+                    </div>
+
+                    <div class="mt-4">
+                        <h5>Your Submission</h5>
+
+                        <!-- If submission exists -->
+                        <t t-if="submission">
+                            <p><strong>Status:</strong> <t t-esc="submission.state"/></p>
+                            <p><strong>Score:</strong> <t t-esc="submission.score or '-'"/></p>
+                            <p><strong>Feedback:</strong></p>
+                            <t t-raw="submission.feedback or 'No feedback yet.'"/>
+
+                            <!-- Show existing link -->
+                            <t t-if="submission.url_link">
+                                <p class="mt-3"><strong>Submission Link:</strong>
+                                    <a t-att-href="submission.url_link" target="_blank">
+                                        <t t-esc="submission.url_link"/>
+                                    </a>
+                                </p>
+                            </t>
+
+                            <!-- Show attached files -->
+                            <t t-if="submission.attachment_ids">
+                                <div class="mt-3">
+                                    <strong>Attached Files:</strong>
+                                    <ul>
+                                        <t t-foreach="submission.attachment_ids" t-as="att">
+                                            <li>
+                                                <a t-attf-href="/web/content/#{att.id}?download=true&amp;access_token=#{att.access_token}" target="_blank">
+                                                    <i class="fa fa-download me-1"></i>
+                                                    <t t-esc="att.name"/>
+                                                </a>
+                                            </li>
+                                        </t>
+                                    </ul>
+                                </div>
+                            </t>
+
+                            <!-- Edit form -->
+                            <div class="mt-4">
+                                <h6>Update or Add Files</h6>
+                                <form action="/ojt/assignment/submit" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                    <input type="hidden" name="assignment_id" t-att-value="assignment.id"/>
+                                    <input type="hidden" name="submission_id" t-att-value="submission.id"/>
+
+                                    <div class="mb-3">
+                                        <label>Update Submission Link</label>
+                                        <input type="text" name="url_link" class="form-control"
+                                            t-att-value="submission.url_link or ''"
+                                            placeholder="e.g. Google Drive / GitHub link"/>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label>Upload Additional Attachments</label>
+                                        <input type="file" name="attachment" class="form-control" multiple="multiple"/>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary">
+                                        Update Submission
+                                    </button>
+                                </form>
+                            </div>
+                        </t>
+
+                        <!-- If no submission -->
+                        <t t-else="">
+                            <form action="/ojt/assignment/submit" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="assignment_id" t-att-value="assignment.id"/>
+                                <div class="mb-3">
+                                    <label>Submission Link (optional)</label>
+                                    <input type="text" name="url_link" class="form-control" placeholder="e.g. Google Drive / GitHub link"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Attachments</label>
+                                    <input type="file" name="attachment" class="form-control" multiple="multiple"/>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Assignment</button>
+                            </form>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_event_detail" name="OJT Event Detail">
+        <t t-call="portal.portal_layout">
+            <div class="container mt16 o_portal_wrap">
+                <h2><t t-esc="event.name"/></h2>
+                <p>
+                    <strong>Batch:</strong> <t t-esc="event.batch_id.name"/>
+                    <span class="mx-2">|</span>
+                    <strong>Start:</strong> <t t-esc="event.date_begin"/>
+                    <span class="mx-2">|</span>
+                    <strong>End:</strong> <t t-esc="event.date_end"/>
+                </p>
+                <p>
+                    <t t-if="event.meeting_url">
+                        <a t-att-href="'/ojt/event/join/%s' % event.id" class="btn btn-primary">
+                            Join Meeting
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <span class="badge bg-secondary">No Meeting URL</span>
+                    </t>
+                </p>
+            </div>
+        </t>
+    </template>
+
+    <template id="certificate_verify" name="Certificate Verify">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <h2>Certificate verification</h2>
+                <t t-if="certificate">
+                    <p><strong>Participant:</strong> <t t-esc="certificate.partner_id.name"/></p>
+                    <p><strong>Batch:</strong> <t t-esc="certificate.batch_id.name"/></p>
+                    <p><strong>Average score:</strong> <t t-esc="certificate.average_score"/></p>
+                    <p><strong>Issued:</strong> <t t-esc="certificate.issued_date"/></p>
+                </t>
+                <t t-else="">
+                    <div class="alert alert-danger">Certificate not found or invalid token.</div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="certificate_verify_invalid" name="Certificate Invalid">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <h2>Certificate not found</h2>
+                <div class="alert alert-warning">The certificate token is invalid.</div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="0">
+    <!-- Kanban View -->
+    <record id="view_ojt_batch_kanban" model="ir.ui.view">
+        <field name="name">ojt.batch.kanban</field>
+        <field name="model">ojt.batch</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="state"/>
+                <field name="participant_ids"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <div class="oe_kanban_content">
+                                <strong><field name="name"/></strong><br/>
+                                <small><field name="code"/></small><br/>
+                                <span>Status: <field name="state"/></span><br/>
+                                <t t-set="count" t-value="record.participant_ids.raw_value.length"/>
+                                <span>Participants: <t t-esc="count"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_ojt_batch_list" model="ir.ui.view">
+        <field name="name">ojt.batch.list</field>
+        <field name="model">ojt.batch</field>
+        <field name="arch" type="xml">
+            <list string="OJT Batches">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="job_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_ojt_batch_form" model="ir.ui.view">
+        <field name="name">ojt.batch.form</field>
+        <field name="model">ojt.batch</field>
+        <field name="arch" type="xml">
+            <form string="OJT Batch">
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="department_id"/>
+                            <field name="job_id" domain="[('department_id', '=', department_id)]" readonly="not department_id"/>
+                            <field name="mentor_ids" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="mode"/>
+                            <field name="capacity"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description" widget="html"/>
+                        </page>
+                        <page string="Participants">
+                            <field name="participant_ids">
+                                <list table="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="ojt_batch_action" model="ir.actions.act_window">
+        <field name="name">OJT Batches</field>
+        <field name="res_model">ojt.batch</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="view_id" ref="view_ojt_batch_kanban"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Manage OJT batches here — create and track ongoing programs.
+            </p>
+        </field>
+    </record>
+
+</odoo>

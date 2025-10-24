@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data noupdate="0">
+    <record id="email_template_on_the_job_training" model="mail.template">
+      <field name="name">Recruitment: On The Job Training Invitation</field>
+      <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
+      <field name="subject">Welcome to Odoo Developer Training!</field>
+      <field name="email_to">{{ object.email_from or (object.partner_id.email if object.partner_id else '') }}</field>
+      <field name="body_html" type="html">
+        <table border="0" cellpadding="0" cellspacing="0" width="590" style="background-color: white; border-collapse: collapse; margin-left: 20px;">
+            <tr>
+                <td valign="top" style="padding: 0px 10px;">
+                    <div style="font-size: 13px; margin: 0px; padding: 0px;">
+                      Hello, <t t-out="object.partner_name or object.partner_id.name or 'Applicant'"/>
+                      <br/><br/>
+                      Congratulations! You've been moved to the <b>On The Job Training</b> stage for the 
+                      "<a t-att-href="hasattr(object.job_id, 'website_url') and object.job_id.website_url or ''" style="color:#9A6C8E;"><strong t-out="object.job_id.name or ''">Odoo Developer</strong></a>"
+                        position.
+                      <br/><br/>
+                      To proceed with your training, please access your portal account using the link below:
+
+                      <div style="padding: 16px 8px 16px 8px;">
+                        <t t-set="base_url" t-value="env['ir.config_parameter'].sudo().get_param('web.base.url')"/>
+                        <t t-if="not object.partner_id.user_ids">
+                          <a t-att-href="object.partner_id._get_signup_url()"
+                            style="background-color:#875a7b; text-decoration:none; color:#fff; padding:8px 16px; border-radius:5px;">
+                            Sign up
+                          </a>
+                        </t>
+                        <t t-else="">
+                          <a t-att-href="base_url + '/web/login'"
+                            style="background-color:#875a7b; text-decoration:none; color:#fff; padding:8px 16px; border-radius:5px;">
+                            Log in
+                          </a>
+                        </t>
+                      </div>
+
+                      Thank you and welcome to our On The Job Training Program!
+                      <br/><br/>
+                      Best regards,<br/>
+                      The HR Team
+
+                      <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
+                      <t t-if="object.user_id">
+                        <h3 style="color:#9A6C8E;"><strong>Your Contact:</strong></h3>
+                        <p>
+                            <strong t-out="object.user_id.name or ''">Mitchell Admin</strong><br/>
+                            <span>Email: <t t-out="object.user_id.email or ''">admin@yourcompany.example.com</t></span><br/>
+                            <span>Phone: <t t-out="object.user_id.phone or ''">+1 650-123-4567</t></span>
+                        </p>
+                        <hr width="97%" style="background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;"/>
+                      </t>
+                    </div>
+                </td>
+            </tr>
+        </table>
+      </field>
+      <field name="auto_delete" eval="True"/>
+      <field name="lang">{{ object.partner_id.lang or '' }}</field>
+    </record>
+  </data>
+</odoo>

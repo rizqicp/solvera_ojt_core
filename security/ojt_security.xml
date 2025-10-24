@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="0">
+    <!-- Category -->
+    <record id="module_category_ojt" model="ir.module.category">
+        <field name="name">On-the-Job Training</field>
+        <field name="description">Access groups for OJT (Manager, Trainer, Mentor)</field>
+        <field name="sequence">12</field>
+        <field name="parent_id" ref="base.module_category_human_resources"/>
+    </record>
+
+    <!-- Groups -->
+    <record id="ojt_group_trainer" model="res.groups">
+        <field name="name">OJT Trainer</field>
+        <field name="category_id" ref="module_category_ojt"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record id="ojt_group_mentor" model="res.groups">
+        <field name="name">OJT Mentor</field>
+        <field name="category_id" ref="module_category_ojt"/>
+    </record>
+
+    <record id="ojt_group_manager" model="res.groups">
+        <field name="name">OJT Manager</field>
+        <field name="category_id" ref="module_category_ojt"/>
+        <field name="implied_ids" eval="[(4, ref('solvera_ojt_core.ojt_group_mentor'))]"/>
+    </record>
+
+</odoo>

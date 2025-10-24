@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <!-- Report action -->
+        <record id="action_report_ojt_certificate" model="ir.actions.report">
+            <field name="name">OJT Certificate</field>
+            <field name="model">ojt.certificate</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">solvera_ojt_core.report_ojt_certificate</field>
+            <field name="binding_model_id" ref="model_ojt_certificate"/>
+            <field name="paperformat_id" ref="base.paperformat_euro"/>
+        </record>
+
+        <!-- Report template -->
+        <template id="report_ojt_certificate">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page" style="padding:40px; font-family: serif;">
+                        <div style="text-align:center; margin-bottom:20px;">
+                            <h1>Certificate of Completion</h1>
+                            <h3>On The Job Training</h3>
+                        </div>
+                        <div style="margin-top:40px;">
+                            <p>Presented to</p>
+                            <h2><t t-esc="o.partner_id.name"/></h2>
+
+                            <p>For successfully completing the batch</p>
+                            <h3><t t-esc="o.batch_id.name"/></h3>
+
+                            <p style="margin-top:20px;">
+                                <strong>Total assignments:</strong> <t t-esc="o.total_assignments"/>
+                                <br/>
+                                <strong>Average score:</strong> <t t-esc="'%.2f' % (o.average_score or 0.0)"/>%
+                            </p>
+
+
+                            <div style="margin-top:60px; display:flex; justify-content:space-between; align-items:center;">
+                                <div style="width:40%;">
+                                    <p>Issued on: <t t-esc="o.issued_date and o.issued_date.strftime('%Y-%m-%d') or ''"/></p>
+                                    <p>Authorized by: <strong>OJT Team</strong></p>
+                                </div>
+                                <div style="text-align:center;">
+                                    <t t-if="o._generate_qr_png_base64()">
+                                        <img t-att-src="'data:image/png;base64,%s' % o._generate_qr_png_base64()" width="120"/>
+                                    </t>
+                                    <p style="font-size:10px;margin-top:5px;">Scan to verify</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

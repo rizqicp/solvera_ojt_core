@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="0">
+    <!-- List View -->
+    <record id="view_ojt_participant_list" model="ir.ui.view">
+        <field name="name">ojt.participant.list</field>
+        <field name="model">ojt.participant</field>
+        <field name="arch" type="xml">
+            <list string="OJT Participants">
+                <field name="partner_id"/>
+                <field name="batch_id"/>
+                <field name="state"/>
+                <field name="company_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_ojt_participant_kanban" model="ir.ui.view">
+        <field name="name">ojt.participant.kanban</field>
+        <field name="model">ojt.participant</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <strong><field name="partner_id"/></strong>
+                            <div>
+                                <span>Batch:</span> <field name="batch_id"/>
+                            </div>
+                            <div>
+                                <span>Status:</span> <field name="state"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_ojt_participant_form" model="ir.ui.view">
+        <field name="name">ojt.participant.form</field>
+        <field name="model">ojt.participant</field>
+        <field name="arch" type="xml">
+            <form string="OJT Participant">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="batch_id"/>
+                            <field name="company_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ojt_participant_action" model="ir.actions.act_window">
+        <field name="name">Participants</field>
+        <field name="res_model">ojt.participant</field>
+        <field name="view_mode">list,kanban,form</field>    
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Manage OJT participants here — view assignments, attendance, and evaluations.
+            </p>
+        </field>
+    </record>
+    
+</odoo>

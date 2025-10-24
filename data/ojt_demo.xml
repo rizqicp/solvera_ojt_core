@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+
+    <!-- Partner -->
+    <record id="base.partner_demo" model="res.partner">
+        <field name="name">Demo Mentor</field>
+        <field name="email">mentor@example.com</field>
+        <field name="user_ids" eval="[(4, ref('base.user_demo'))]"/>
+    </record>
+
+    <record id="base.partner_admin" model="res.partner">
+        <field name="name">Manager Admin</field>
+        <field name="email">manager@example.com</field>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="ojt_group_mentor_user" model="res.users">
+        <field name="name">Mentor User</field>
+        <field name="login">mentor@example.com</field>
+        <field name="email">mentor@example.com</field>
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="groups_id" eval="[(4, ref('solvera_ojt_core.ojt_group_mentor'))]"/>
+    </record>
+
+    <record id="ojt_group_manager_user" model="res.users">
+        <field name="name">OJT Manager</field>
+        <field name="login">ojt_manager@example.com</field>
+        <field name="email">ojt_manager@example.com</field>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="groups_id" eval="[(4, ref('solvera_ojt_core.ojt_group_manager'))]"/>
+    </record>
+
+    <!-- Batches -->
+    <record id="ojt_batch_demo_nov25" model="ojt.batch">
+        <field name="company_id" ref="base.main_company"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="job_id" ref="job_odoo_developer_training"/>
+        <field name="name">OJT Odoo Developer - Nov 2025</field>
+        <field name="code">OJTBATCH/2025/DEV002</field>
+        <field name="description"><![CDATA[
+            <p>Batch untuk kandidat Odoo Developer yang masih dalam tahap rekrutmen.</p>
+        ]]></field>
+        <field name="start_date">2025-11-01</field>
+        <field name="end_date">2026-01-31</field>
+        <field name="mode">hybrid</field>
+        <field name="capacity">5</field>
+        <field name="state">recruit</field>
+    </record>
+
+    <record id="ojt_batch_demo_oct25" model="ojt.batch">
+        <field name="company_id" ref="base.main_company"/>
+        <field name="department_id" ref="hr.dep_rd"/>
+        <field name="job_id" ref="job_odoo_developer_training"/>
+        <field name="name">OJT Odoo Developer - Oct 2025</field>
+        <field name="code">OJTBATCH/2025/DEV001</field>
+        <field name="description"><![CDATA[
+            <p>Program On-the-Job Training untuk posisi <b>Odoo Developer</b>. 
+            Peserta belajar struktur modul, ORM, XML views, dan mekanisme bisnis Odoo.</p>
+        ]]></field>
+        <field name="start_date">2025-10-01</field>
+        <field name="end_date">2025-12-31</field>
+        <field name="mode">hybrid</field>
+        <field name="capacity">5</field>
+        <field name="state">ongoing</field>
+    </record>
+
+    <!-- Candidates -->
+    <record id="candidate_john_dev" model="hr.candidate">
+        <field name="partner_name">John Dev</field>
+        <field name="email_from">john.dev@example.com</field>
+    </record>
+
+    <record id="candidate_jane_coder" model="hr.candidate">
+        <field name="partner_name">Jane Coder</field>
+        <field name="email_from">jane.coder@example.com</field>
+    </record>
+
+    <record id="candidate_rizky_odoo" model="hr.candidate">
+        <field name="partner_name">Rizky Odoo</field>
+        <field name="email_from">rizky.odoo@example.com</field>
+    </record>
+
+    <record id="candidate_andi_script" model="hr.candidate">
+        <field name="partner_name">Andi Script</field>
+        <field name="email_from">andi.script@example.com</field>
+    </record>
+
+    <!-- Applicants -->
+    <record id="applicant_demo_1" model="hr.applicant">
+        <field name="candidate_id" ref="candidate_john_dev"/>
+        <field name="job_id" ref="job_odoo_developer_training"/>
+        <field name="email_from">john.dev@example.com</field>
+        <field name="stage_id" ref="hr_recruitment.stage_job1"/>
+    </record>
+
+    <record id="applicant_demo_2" model="hr.applicant">
+        <field name="candidate_id" ref="candidate_jane_coder"/>
+        <field name="job_id" ref="job_odoo_developer_training"/>
+        <field name="email_from">jane.coder@example.com</field>
+        <field name="stage_id" ref="hr_recruitment.stage_job1"/>
+    </record>
+
+    <record id="applicant_demo_3" model="hr.applicant">
+        <field name="candidate_id" ref="candidate_rizky_odoo"/>
+        <field name="job_id" ref="job_odoo_developer_training"/>
+        <field name="email_from">rizky.odoo@example.com</field>
+        <field name="stage_id" ref="hr_recruitment.stage_job1"/>
+    </record>
+
+    <record id="applicant_demo_4" model="hr.applicant">
+        <field name="candidate_id" ref="candidate_andi_script"/>
+        <field name="job_id" ref="job_odoo_developer_training"/>
+        <field name="email_from">andi.script@example.com</field>
+        <field name="stage_id" ref="hr_recruitment.stage_job1"/>
+    </record>
+
+    <!-- Participants -->
+    <record id="ojt_participant_john" model="ojt.participant">
+        <field name="company_id" ref="base.main_company"/>
+        <field name="batch_id" ref="ojt_batch_demo_oct25"/>
+        <field name="applicant_id" ref="applicant_demo_1"/>
+        <field name="partner_id" ref="base.res_partner_1"/>
+        <field name="state">active</field>
+    </record>
+
+    <record id="ojt_participant_jane" model="ojt.participant">
+        <field name="company_id" ref="base.main_company"/>
+        <field name="batch_id" ref="ojt_batch_demo_oct25"/>
+        <field name="applicant_id" ref="applicant_demo_2"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
+        <field name="state">active</field>
+    </record>
+
+    <record id="ojt_participant_rizky" model="ojt.participant">
+        <field name="company_id" ref="base.main_company"/>
+        <field name="batch_id" ref="ojt_batch_demo_nov25"/>
+        <field name="applicant_id" ref="applicant_demo_3"/>
+        <field name="partner_id" ref="base.res_partner_3"/>
+        <field name="state">active</field>
+    </record>
+
+    <record id="ojt_participant_andi" model="ojt.participant">
+        <field name="company_id" ref="base.main_company"/>
+        <field name="batch_id" ref="ojt_batch_demo_nov25"/>
+        <field name="applicant_id" ref="applicant_demo_4"/>
+        <field name="partner_id" ref="base.res_partner_4"/>
+        <field name="state">active</field>
+    </record>
+</odoo>

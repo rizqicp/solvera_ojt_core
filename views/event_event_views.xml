@@ -1,0 +1,55 @@
+<odoo>
+    <record id="view_event_form_inherit_ojt" model="ir.ui.view">
+        <field name="name">event.event.form.ojt</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <!-- Inject OJT section inside notebook -->
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="On The Job Training" name="ojt_details">
+                    <group string="OJT Session Info" col="2">
+                        <field name="batch_id"/>
+                        <field name="assignment_id"/>
+                        <field name="meeting_url"/>
+                        <field name="qr_token" readonly="1"/>
+                        <field name="qr_url" readonly="1"/>
+                        <field name="qr_image" widget="image" class="oe_avatar"/>
+                    </group>
+
+                    <div class="oe_button_box" name="button_box">
+                        <button name="regenerate_qr_token"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-qrcode"
+                            string="Regenerate QR"/>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_event_tree_inherit_ojt" model="ir.ui.view">
+        <field name="name">event.event.tree.ojt</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_tree"/>
+        
+        <field name="arch" type="xml">
+            <!-- Add batch info after the name column -->
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="batch_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="ojt_event_action" model="ir.actions.act_window">
+        <field name="name">Events</field>
+        <field name="res_model">event.event</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="view_id" ref="view_event_tree_inherit_ojt"/>
+        <field name="domain">[('batch_id', '!=', False)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Track OJT Events here</p>
+        </field>
+    </record>
+</odoo>

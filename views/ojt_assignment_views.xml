@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="0">
+    <!-- Kanban View -->
+    <record id="view_ojt_assignment_kanban" model="ir.ui.view">
+        <field name="name">ojt.assignment.kanban</field>
+        <field name="model">ojt.assignment</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="batch_id"/>
+                <field name="deadline"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card">
+                            <div class="oe_kanban_content">
+                                <strong><field name="name"/></strong><br/>
+                                <small>Batch: <field name="batch_id"/></small><br/>
+                                <small>Deadline: <field name="deadline"/></small><br/>
+                                <span>Status: <field name="state"/></span><br />
+                                <span>Submission: <field name="submission_count"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- List View -->
+    <record id="view_ojt_assignment_list" model="ir.ui.view">
+        <field name="name">ojt.assignment.list</field>
+        <field name="model">ojt.assignment</field>
+        <field name="arch" type="xml">
+            <list string="Assignments">
+                <field name="name"/>
+                <field name="batch_id"/>
+                <field name="deadline"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_ojt_assignment_form" model="ir.ui.view">
+        <field name="name">ojt.assignment.form</field>
+        <field name="model">ojt.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Assignment">
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="batch_id"/>
+                        <field name="name"/>
+                        <field name="assignment_type"/>
+                        <field name="attachment_required"/>
+                        <field name="max_score"/>
+                        <field name="deadline"/>
+                        <field name="state"/>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Submissions">
+                            <field name="submit_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_ojt_assignment_search" model="ir.ui.view">
+        <field name="name">ojt.assignment.search</field>
+        <field name="model">ojt.assignment</field>
+        <field name="arch" type="xml">
+            <search string="Search Assignments">
+                <field name="name"/>
+                <field name="batch_id"/>
+                <filter string="Draft" name="filter_draft" domain="[('state','=','draft')]"/>
+                <filter string="Ongoing" name="filter_ongoing" domain="[('state','=','ongoing')]"/>
+                <filter string="Done" name="filter_done" domain="[('state','=','done')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="ojt_assignment_action" model="ir.actions.act_window">
+        <field name="name">Assignments</field>
+        <field name="res_model">ojt.assignment</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Create and manage OJT assignments here</p>
+        </field>
+    </record>
+
+</odoo>

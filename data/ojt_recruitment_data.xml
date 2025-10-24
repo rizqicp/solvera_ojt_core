@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Create new Job Position -->
+        <record id="job_odoo_developer_training" model="hr.job">
+            <field name="name">Odoo Developer Training</field>
+            <field name="department_id" ref="hr.dep_rd"/>
+            <field name="no_of_recruitment">5</field>
+            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+            <field name="description">OJT position for Odoo Developer candidates.</field>
+            <field name="website_published" eval="True"/>
+        </record>
+
+    <!-- Create custom recruitment stage specific to this job -->
+    <record id="stage_on_the_job_training" model="hr.recruitment.stage">
+        <field name="name">On The Job Training</field>
+        <field name="sequence">2</field>
+        <field name="fold" eval="False"/>
+        <field name="job_ids" eval="[(4, ref('job_odoo_developer_training'))]"/>
+        <field name="template_id" ref="email_template_on_the_job_training"/> 
+    </record>
+
+</odoo>

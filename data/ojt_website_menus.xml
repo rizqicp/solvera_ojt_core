@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <!-- Create new website menu -->
+    <record id="website_menu_ojt" model="website.menu">
+        <field name="name">On The Job Training</field>
+        <field name="url">/ojt</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">58</field>
+        <field name="group_ids" eval="[(4, ref('solvera_ojt_core.ojt_group_trainer'))]"/>
+    </record>
+</odoo>
